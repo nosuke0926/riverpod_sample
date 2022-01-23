@@ -5,7 +5,8 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:riverpod_sample/main.dart';
@@ -13,18 +14,32 @@ import 'package:riverpod_sample/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    // テストするウィジェットを指定
+    // pumpWidget() は対象の Widget のインスタンスを生成し、その生成処理が問題なく完了することをチェックする
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MyApp(),
+      ),
+    );
 
     // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
+    expect(find.text('0'), findsNWidgets(3));
     expect(find.text('1'), findsNothing);
 
     // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await tester.tap(find.byIcon(CupertinoIcons.add));
+    await tester.pump(); // Widgetの再生成を促す（テスト実行環境では自動でリビルドされないので明示的に指定）
 
     // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
+    expect(find.text('0'), findsOneWidget);
+    expect(find.text('1'), findsNWidgets(2));
+
+    await tester.tap(find.byIcon(CupertinoIcons.minus));
+    await tester.tap(find.byIcon(CupertinoIcons.minus));
+    await tester.pump();
+
+    expect(find.text('-1'), findsOneWidget);
     expect(find.text('1'), findsOneWidget);
+    expect(find.text('2'), findsOneWidget);
   });
 }
