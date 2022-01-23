@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_sample/logic.dart';
+import 'package:riverpod_sample/logic/logic.dart';
 import 'package:riverpod_sample/provider.dart';
 
 class ViewModel {
