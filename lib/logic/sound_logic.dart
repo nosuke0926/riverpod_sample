@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:riverpod_sample/data/count_data.dart';
 
 class SoundLogic {
   static const soundDataUp = 'assets/sounds/up.mp3';
@@ -15,6 +16,19 @@ class SoundLogic {
       soundDataDown,
       soundDataReset,
     ]);
+  }
+
+  void valueChanged(
+    CountData oldData,
+    CountData newData,
+  ) {
+    if (newData.countUp == 0 && newData.countDown == 0) {
+      playResetSound();
+    } else if (oldData.countUp + 1 == newData.countUp) {
+      playUpSound();
+    } else if (oldData.countDown + 1 == newData.countDown) {
+      playDownSound();
+    }
   }
 
   void playUpSound() {
