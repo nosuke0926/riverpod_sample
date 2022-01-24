@@ -1,10 +1,11 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:riverpod_sample/data/count_data.dart';
+import 'package:riverpod_sample/logic/count_data_changed_notifier.dart';
 
-class SoundLogic {
-  static const soundDataUp = 'assets/sounds/up.mp3';
-  static const soundDataDown = 'assets/sounds/down.mp3';
-  static const soundDataReset = 'assets/sounds/reset.mp3';
+class SoundLogic with CountDataChangedNotifier {
+  static const soundDataUp = 'sounds/up.mp3';
+  static const soundDataDown = 'sounds/down.mp3';
+  static const soundDataReset = 'sounds/reset.mp3';
 
   final AudioCache _cache = AudioCache(
     fixedPlayer: AudioPlayer(),
@@ -18,6 +19,7 @@ class SoundLogic {
     ]);
   }
 
+  @override
   void valueChanged(
     CountData oldData,
     CountData newData,
