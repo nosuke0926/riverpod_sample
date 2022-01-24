@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_sample/data/count_data.dart';
 import 'package:riverpod_sample/logic/count_data_changed_notifier.dart';
+import 'dart:math' as math;
 
 class ButtonAnimationLogic with CountDataChangedNotifier {
   late AnimationController _animationController;
   late Animation<double> _animationScale; // 拡大縮小のアニメーション
+  late Animation<double> _animationRotation; // 回転のアニメーション
 
-  get animationScale => _animationScale;
+  late AnimationCombination _animationCombination;
+
+  get animationCombination => _animationCombination;
 
   ValueChangedCondition startCondition;
 
@@ -27,6 +31,19 @@ class ButtonAnimationLogic with CountDataChangedNotifier {
         .drive(
           Tween(begin: 1, end: 1.8), // どんな感じで変化するかを記述
         );
+
+    _animationRotation = _animationController
+        .drive(
+          CurveTween(
+            curve: Interval(0.4, 1, curve: ButtonRotateCurve()),
+          ), // どの区間でアニメーションを行うか
+        )
+        .drive(
+          Tween(begin: 0, end: 1), // どんな感じで変化するかを記述
+        );
+
+    _animationCombination =
+        AnimationCombination(_animationScale, _animationRotation);
   }
 
   void dispose() {
@@ -48,4 +65,20 @@ class ButtonAnimationLogic with CountDataChangedNotifier {
       start();
     }
   }
+}
+
+class ButtonRotateCurve extends Curve {
+  @override
+  double transform(double t) {
+    return math.sin(2 * math.pi * t) / 12;
+  }
+}
+
+class AnimationCombination {
+  final Animation<double> animationScale; // 拡大縮小のアニメーション
+  final Animation<double> animationRotation; // 回転のアニメーション
+  AnimationCombination(
+    this.animationScale,
+    this.animationRotation,
+  );
 }

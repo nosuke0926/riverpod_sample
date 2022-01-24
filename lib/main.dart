@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_sample/logic/button_animation_logic.dart';
 import 'package:riverpod_sample/provider.dart';
 import 'package:riverpod_sample/view_model.dart';
 
@@ -75,8 +76,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                 // プラスボタン
                 FloatingActionButton(
                   onPressed: _viewModel.onIncrease,
-                  child: ScaleTransition(
-                    scale: _viewModel.animationPlus,
+                  child: ButtonAnimation(
+                    animationCombination: _viewModel.animationPlusCombination,
                     child: const Icon(
                       CupertinoIcons.plus,
                     ),
@@ -86,8 +87,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                 // マイナスボタン
                 FloatingActionButton(
                   onPressed: _viewModel.onDecrease,
-                  child: ScaleTransition(
-                    scale: _viewModel.animationMinus,
+                  child: ButtonAnimation(
+                    animationCombination: _viewModel.animationMinusCombination,
                     child: const Icon(
                       CupertinoIcons.minus,
                     ),
@@ -107,12 +108,34 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _viewModel.onReset,
-        child: ScaleTransition(
-          scale: _viewModel.animationReset,
+        child: ButtonAnimation(
+          animationCombination: _viewModel.animationResetCombination,
           child: const Icon(
             CupertinoIcons.refresh,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ButtonAnimation extends StatelessWidget {
+  const ButtonAnimation({
+    Key? key,
+    required this.animationCombination,
+    required this.child,
+  }) : super(key: key);
+
+  final AnimationCombination animationCombination;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaleTransition(
+      scale: animationCombination.animationScale,
+      child: RotationTransition(
+        turns: animationCombination.animationRotation,
+        child: child,
       ),
     );
   }

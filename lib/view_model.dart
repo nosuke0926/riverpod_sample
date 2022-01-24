@@ -38,7 +38,7 @@ class ViewModel {
     );
     _buttonAnimationLogicReset = ButtonAnimationLogic(
       tickerProvider,
-      (oldData, newData) => oldData.count == 0 && newData.count == 0,
+      (oldData, newData) => newData.countUp == 0 && newData.countDown == 0,
     );
     _soundLogic.load();
 
@@ -53,9 +53,15 @@ class ViewModel {
   get count => _ref.watch(countDataProvider).count.toString();
   get countUp => _ref.watch(countDataProvider).countUp.toString();
   get countDown => _ref.watch(countDataProvider).countDown.toString();
-  get animationPlus => _buttonAnimationLogicPlus.animationScale;
-  get animationMinus => _buttonAnimationLogicMinus.animationScale;
-  get animationReset => _buttonAnimationLogicReset.animationScale;
+
+  get animationPlusCombination =>
+      _buttonAnimationLogicPlus.animationCombination;
+
+  get animationMinusCombination =>
+      _buttonAnimationLogicMinus.animationCombination;
+
+  get animationResetCombination =>
+      _buttonAnimationLogicReset.animationCombination;
 
   void onIncrease() {
     _logic.increase();
